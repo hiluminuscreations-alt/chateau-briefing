@@ -222,16 +222,16 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
         <div class="field">
           <label class="field-label">Quais estruturas o espaço oferece? <span class="req">*</span></label>
           <div class="check-list">
-            <label class="check-item"><input type="checkbox" name="estruturas" value="Piscina"><div class="check-box"></div>Piscina</label>
-            <label class="check-item"><input type="checkbox" name="estruturas" value="Churrasqueira / área gourmet"><div class="check-box"></div>Churrasqueira / área gourmet</label>
-            <label class="check-item"><input type="checkbox" name="estruturas" value="Salão de festas coberto"><div class="check-box"></div>Salão de festas coberto</label>
-            <label class="check-item"><input type="checkbox" name="estruturas" value="Cozinha equipada"><div class="check-box"></div>Cozinha equipada</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Piscina" checked><div class="check-box"></div>Piscina</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Churrasqueira / área gourmet" checked><div class="check-box"></div>Churrasqueira / área gourmet</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Salão de festas coberto" checked><div class="check-box"></div>Salão de festas coberto</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Cozinha equipada" checked><div class="check-box"></div>Cozinha equipada</label>
             <label class="check-item"><input type="checkbox" name="estruturas" value="Quartos / hospedagem"><div class="check-box"></div>Quartos / hospedagem</label>
             <label class="check-item"><input type="checkbox" name="estruturas" value="Quadra esportiva"><div class="check-box"></div>Quadra esportiva</label>
             <label class="check-item"><input type="checkbox" name="estruturas" value="Espaço kids / playground"><div class="check-box"></div>Espaço kids / playground</label>
             <label class="check-item"><input type="checkbox" name="estruturas" value="Wi-Fi"><div class="check-box"></div>Wi-Fi</label>
             <label class="check-item"><input type="checkbox" name="estruturas" value="Gerador / energia própria"><div class="check-box"></div>Gerador / energia própria</label>
-            <label class="check-item"><input type="checkbox" name="estruturas" value="Estacionamento"><div class="check-box"></div>Estacionamento</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Estacionamento" checked><div class="check-box"></div>Estacionamento</label>
           </div>
         </div>
         <div class="field">
@@ -303,8 +303,9 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
       </div>
       <div class="section-body">
         <div class="field">
-          <label class="field-label">Valor da diária completa — final de semana</label>
-          <input type="text" name="valor_fds" value="A partir de R$ 30,00 por pessoa (variável conforme tipo de evento)" placeholder="R$ ____">
+          <label class="field-label">Qual o valor cobrado por tipo de evento?</label>
+          <textarea name="valor_fds" placeholder="Ex: Aniversário — R$ 35/pessoa&#10;Casamento — R$ 50/pessoa&#10;Churrasco familiar — R$ 30/pessoa&#10;Day use — R$ 25/pessoa&#10;Evento corporativo — sob consulta" style="min-height:120px">A partir de R$ 30,00 por pessoa (variável conforme tipo de evento)</textarea>
+          <div class="hint">Detalhe o valor para cada tipo de evento que o espaço recebe.</div>
         </div>
         <div class="field">
           <label class="field-label">Valor da diária — dia útil / semana</label>
