@@ -1,154 +1,564 @@
-// ════════════════════════════════════════════════════════
-// CHÂTEAU SANTO ANTÔNIO — Recebedor de respostas do briefing
-// Cole este script no Apps Script e publique como Web App
-// ════════════════════════════════════════════════════════
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Briefing — Ch&acirc;teau Santo Ant&ocirc;nio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ivory:#FCFAF4;
+  --warm-white:#FFFDF8;
+  --sand-50:#F7F1E6;
+  --sand-100:#F0E8D8;
+  --sand-200:#E6DAC4;
+  --ink:#1F2A35;
+  --ink-soft:#45525F;
+  --ink-muted:#6B7682;
+  --sage-700:#51604F;
+  --sage-500:#7E8E76;
+  --sage-300:#A9B5A0;
+  --sage-200:#CBD3C2;
+  --sage-100:#E7ECE1;
+  --sage-50:#F1F4ED;
+  --gold-500:#C2A063;
+  --gold-400:#D7B570;
+  --gold-300:#E7CB93;
+  --gold-100:#F4E7C8;
+  --gold-50:#FAF2DF;
+  --border-soft:#ECE4D5;
+  --border-base:#E1D7C5;
+  --font-display:'Cormorant',Georgia,serif;
+  --font-sans:'Jost','Avenir Next',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-// ID da sua planilha Google Sheets (pegue na URL: /d/ESTE_ID_AQUI/edit)
-const SPREADSHEET_ID = '1W_TxQvJXZbAvuxH12BVAJAOlZ2DcYZNNHz1vq0PplDU';
-const SHEET_NAME = 'Respostas Briefing';
+/* HEADER — claro, dourado suave */
+.site-header{
+  background:linear-gradient(160deg, var(--gold-50) 0%, var(--sand-100) 60%, var(--sage-50) 100%);
+  padding:3.5rem 2rem 3rem;
+  text-align:center;
+  border-bottom:1px solid var(--gold-300);
+  position:relative;
+  overflow:hidden;
+}
+.site-header::before{
+  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(215,181,112,0.2) 0%,transparent 65%);
+  pointer-events:none;
+}
+.header-eyebrow{font-size:.7rem;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-500);margin-bottom:.75rem}
+.header-title{font-family:var(--font-display);font-size:clamp(2rem,5vw,3.2rem);font-weight:400;color:var(--sage-700);line-height:1.05;letter-spacing:-.01em;margin-bottom:.5rem}
+.header-subtitle{font-size:.9rem;color:var(--ink-muted);font-weight:300;letter-spacing:.04em;margin-bottom:1.25rem}
+.header-desc{font-size:.86rem;color:var(--ink-soft);font-weight:300;line-height:1.75;max-width:480px;margin:0 auto 1.5rem}
+.gold-line{height:1px;background:linear-gradient(90deg,transparent,var(--gold-400) 50%,transparent);opacity:.6;margin-top:1.5rem}
 
-function doPost(e) {
+/* PROGRESS */
+.progress-wrap{background:var(--warm-white);padding:.9rem 2rem;display:flex;align-items:center;gap:1rem;border-bottom:1px solid var(--border-soft);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(40,33,20,.04)}
+.progress-track{flex:1;height:3px;background:var(--border-base);border-radius:99px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--sage-400,#8FA087),var(--gold-400));border-radius:99px;width:0%;transition:width .5s ease}
+.progress-label{font-size:.72rem;color:var(--ink-muted);font-weight:500;white-space:nowrap}
+
+/* LAYOUT */
+.container{max-width:680px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+/* SECTION CARDS */
+.section-card{background:var(--warm-white);border:1px solid var(--border-soft);border-radius:18px;overflow:hidden;margin-bottom:1.25rem;box-shadow:0 1px 4px rgba(40,33,20,.04)}
+.section-header{padding:.9rem 1.5rem;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;gap:.75rem;background:var(--gold-50)}
+.section-icon{width:32px;height:32px;background:var(--gold-100);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.section-title{font-family:var(--font-display);font-size:1.1rem;font-weight:500;color:var(--sage-700)}
+.section-num{margin-left:auto;font-size:.68rem;font-weight:500;letter-spacing:.1em;color:var(--gold-500);text-transform:uppercase}
+.section-body{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.1rem}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:.4rem}
+.field-label{font-size:.78rem;font-weight:500;color:var(--ink-soft);letter-spacing:.02em}
+.field-label .req{color:var(--gold-500);margin-left:2px}
+.field input[type=text],.field input[type=tel],.field input[type=email],.field textarea,.field select{
+  font-family:var(--font-sans);font-size:.88rem;color:var(--ink);
+  background:var(--ivory);border:1px solid var(--border-base);
+  border-radius:10px;padding:.65rem .9rem;width:100%;
+  outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none
+}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--sage-300);box-shadow:0 0 0 3px rgba(169,181,160,.18)}
+.field textarea{resize:vertical;min-height:82px;line-height:1.6}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.hint{font-size:.73rem;color:var(--ink-muted);font-style:italic;line-height:1.5}
+
+/* RADIO & CHECKBOX */
+.radio-group{display:flex;flex-wrap:wrap;gap:.45rem}
+.opt{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .85rem;background:var(--ivory);border:1px solid var(--border-base);border-radius:8px;cursor:pointer;font-size:.8rem;color:var(--ink-soft);font-family:var(--font-sans);transition:all .15s;user-select:none}
+.opt:hover{border-color:var(--sage-300);color:var(--sage-700);background:var(--sage-50)}
+.opt input{display:none}
+.opt.selected{background:var(--sage-50);border-color:var(--sage-500);color:var(--sage-700);font-weight:500}
+.check-list{display:flex;flex-direction:column;gap:.4rem}
+.check-item{display:flex;align-items:center;gap:.6rem;padding:.48rem .9rem;background:var(--ivory);border:1px solid var(--border-base);border-radius:8px;cursor:pointer;font-size:.83rem;color:var(--ink-soft);font-family:var(--font-sans);transition:all .15s;user-select:none}
+.check-item:hover{border-color:var(--sage-300);background:var(--sage-50)}
+.check-item input{display:none}
+.check-box{width:15px;height:15px;border:1.5px solid var(--border-base);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:9px;color:white}
+.check-item.selected{background:var(--sage-50);border-color:var(--sage-500);color:var(--sage-700)}
+.check-item.selected .check-box{background:var(--sage-500);border-color:var(--sage-500)}
+
+/* SUBMIT */
+.submit-area{text-align:center;padding:1.5rem 0 0}
+.btn-submit{
+  font-family:var(--font-sans);font-size:.88rem;font-weight:500;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--warm-white);
+  background:linear-gradient(135deg,var(--sage-500) 0%,var(--sage-700) 100%);
+  border:none;border-radius:10px;padding:.9rem 2.5rem;cursor:pointer;
+  transition:opacity .2s,transform .1s;min-width:220px;
+  box-shadow:0 4px 16px rgba(126,142,118,.25)
+}
+.btn-submit:hover{opacity:.9}
+.btn-submit:active{transform:scale(.98)}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.submit-note{font-size:.73rem;color:var(--ink-muted);margin-top:.6rem;font-weight:300}
+
+/* LOADING */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(241,244,237,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:1rem;backdrop-filter:blur(4px)}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:40px;height:40px;border:3px solid var(--sage-200);border-top-color:var(--sage-500);border-radius:50%;animation:spin .8s linear infinite}
+.loading-text{font-family:var(--font-sans);font-size:.85rem;color:var(--sage-700);font-weight:400}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* SUCCESS */
+.success-screen{display:none;text-align:center;padding:4rem 2rem;background:var(--warm-white);border-radius:18px;border:1px solid var(--border-soft)}
+.success-icon{width:64px;height:64px;background:var(--sage-100);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.6rem}
+.success-title{font-family:var(--font-display);font-size:2rem;font-weight:400;color:var(--sage-700);margin-bottom:.6rem}
+.success-text{font-size:.9rem;color:var(--ink-soft);line-height:1.75;max-width:360px;margin:0 auto}
+
+/* ERROR */
+.field-error{font-size:.72rem;color:#BF5A49;margin-top:.2rem;display:none}
+.field.has-error input,.field.has-error textarea{border-color:#BF5A49}
+.field.has-error .field-error{display:block}
+
+/* FOOTER */
+.site-footer{text-align:center;padding:2rem;font-size:.72rem;color:var(--ink-muted);border-top:1px solid var(--border-soft);background:var(--warm-white)}
+
+@media(max-width:520px){
+  .row2{grid-template-columns:1fr}
+  .site-header{padding:2.5rem 1.25rem 2rem}
+  .section-body{padding:1rem 1.1rem}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Enviando suas respostas...</div>
+</div>
+
+<header class="site-header">
+  <div class="header-eyebrow">Briefing de Projeto</div>
+  <h1 class="header-title">Ch&acirc;teau Santo Ant&ocirc;nio</h1>
+  <div class="header-subtitle">Ch&aacute;cara & Eventos · Repaginação Instagram</div>
+  <p class="header-desc">Olá, Luiz! Para começarmos a repaginação do Instagram do Ch&acirc;teau, precisamos conhecer melhor o espaço. Preencha com calma — suas respostas serão a base de todo o projeto.</p>
+  <div class="gold-line"></div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="pgFill"></div></div>
+  <div class="progress-label" id="pgLabel">0 de 39</div>
+</div>
+
+<main class="container">
+  <form id="briefingForm" novalidate>
+
+    <!-- 01 SOBRE O ESPAÇO -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🏡</div>
+        <div class="section-title">Sobre o Espaço</div>
+        <div class="section-num">01 — 08</div>
+      </div>
+      <div class="section-body">
+        <div class="field" id="f-nome">
+          <label class="field-label">Nome oficial do espaço <span class="req">*</span></label>
+          <input type="text" name="nome_espaco" placeholder="Ex: Ch&acirc;teau Santo Ant&ocirc;nio" value="Ch&acirc;teau Santo Ant&ocirc;nio">
+          <div class="field-error">Por favor, preencha este campo.</div>
+        </div>
+        <div class="field" id="f-endereco">
+          <label class="field-label">Endereço completo <span class="req">*</span></label>
+          <textarea name="endereco" placeholder="Rua, número, cidade, estado, CEP" style="min-height:64px">R. Cinco, 215 - Ch&aacute;cara Novo Horizonte, Contagem - MG, 32044-451</textarea>
+          <div class="field-error">Por favor, preencha este campo.</div>
+        </div>
+        <div class="field" id="f-acesso">
+          <label class="field-label">Como chegar — referência de acesso <span class="req">*</span></label>
+          <textarea name="acesso" placeholder="Ex: 20 min de BH pela Fernão Dias, acesso por asfalto até o portão" style="min-height:64px"></textarea>
+          <div class="field-error">Por favor, preencha este campo.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Tipo de estrada até o espaço</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="estrada" value="Totalmente asfalto">Totalmente asfalto</label>
+            <label class="opt"><input type="radio" name="estrada" value="Asfalto + trecho de terra">Asfalto + trecho de terra</label>
+            <label class="opt"><input type="radio" name="estrada" value="Totalmente terra">Totalmente terra</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Há quanto tempo o espaço existe?</label>
+          <input type="text" name="tempo_existencia" placeholder="Ex: 8 anos">
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- 02 ESTRUTURA -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">🔧</div>
+        <div class="section-title">Estrutura & Diferenciais</div>
+        <div class="section-num">09 — 18</div>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">Quais estruturas o espaço oferece? <span class="req">*</span></label>
+          <div class="check-list">
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Piscina" checked><div class="check-box"></div>Piscina</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Churrasqueira / área gourmet" checked><div class="check-box"></div>Churrasqueira / área gourmet</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Salão de festas coberto" checked><div class="check-box"></div>Salão de festas coberto</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Cozinha equipada" checked><div class="check-box"></div>Cozinha equipada</label>
+            <label class="check-item"><input type="checkbox" name="estruturas" value="Quartos / hospedagem"><div class="check-box"></div>Quartos / hospedagem</label>
+            <label class="check-item"><input type="checkbox" name="estruturas" value="Quadra esportiva"><div class="check-box"></div>Quadra esportiva</label>
+            <label class="check-item"><input type="checkbox" name="estruturas" value="Espaço kids / playground"><div class="check-box"></div>Espaço kids / playground</label>
+            <label class="check-item"><input type="checkbox" name="estruturas" value="Wi-Fi"><div class="check-box"></div>Wi-Fi</label>
+            <label class="check-item"><input type="checkbox" name="estruturas" value="Gerador / energia própria"><div class="check-box"></div>Gerador / energia própria</label>
+            <label class="check-item selected"><input type="checkbox" name="estruturas" value="Estacionamento" checked><div class="check-box"></div>Estacionamento</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Quantos carros cabem no estacionamento?</label>
+          <input type="text" name="estacionamento" placeholder="Ex: até 20 carros">
+        </div>
+        <div class="field">
+          <label class="field-label">Outras estruturas ou características únicas</label>
+          <textarea name="outras_estruturas" placeholder="Cachoeira, lago, trilha, glamping, vista panorâmica..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">O que torna o Ch&acirc;teau diferente dos concorrentes?</label>
+          <textarea name="diferenciais" placeholder="Ex: localização privilegiada, atendimento personalizado, natureza preservada..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Aceita pets?</label>
+          <div class="radio-group">
+            <label class="opt selected"><input type="radio" name="pets" value="Sim, sem restrições" checked>Sim, sem restrições</label>
+            <label class="opt"><input type="radio" name="pets" value="Sim, com restrições">Sim, com restrições</label>
+            <label class="opt"><input type="radio" name="pets" value="Não aceita">Não aceita</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Quais tipos de eventos são realizados?</label>
+          <div class="check-list">
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Aniversários" checked><div class="check-box"></div>Aniversários</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Casamentos e bodas" checked><div class="check-box"></div>Casamentos e bodas</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Churrasco e confraternizações" checked><div class="check-box"></div>Churrasco e confraternizações</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Eventos corporativos" checked><div class="check-box"></div>Eventos corporativos</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Day use / lazer familiar" checked><div class="check-box"></div>Day use / lazer familiar</label>
+            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Fotoshoots / ensaios"><div class="check-box"></div>Fotoshoots / ensaios</label>
+            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Retiros / imersões"><div class="check-box"></div>Retiros / imersões</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Permite decoração?</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="decoracao" value="Livre, sem restrições">Livre, sem restrições</label>
+            <label class="opt"><input type="radio" name="decoracao" value="Livre com restrições">Livre com restrições</label>
+            <label class="opt"><input type="radio" name="decoracao" value="Somente decoração indicada">Só decoração indicada</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Se tem restrições na decoração, quais são?</label>
+          <input type="text" name="restricoes_decoracao" placeholder="Ex: sem confete, sem cola nas paredes...">
+        </div>
+        <div class="field">
+          <label class="field-label">Som — até que horário é permitido?</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="som_horario" value="Até 22h">Até 22h</label>
+            <label class="opt selected"><input type="radio" name="som_horario" value="Até 00h" checked>Até 00h</label>
+            <label class="opt"><input type="radio" name="som_horario" value="Até 02h">Até 02h</label>
+            <label class="opt"><input type="radio" name="som_horario" value="Outro horário">Outro horário</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Observações sobre o som</label>
+          <input type="text" name="som_obs" placeholder="Volume, DJ, banda ao vivo, tipo de equipamento...">
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 PREÇOS -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">💰</div>
+        <div class="section-title">Preços, Reservas & Funcionamento</div>
+        <div class="section-num">19 — 29</div>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">Qual o valor cobrado por tipo de evento?</label>
+          <textarea name="valor_fds" placeholder="Ex: Aniversário — R$ 35/pessoa&#10;Casamento — R$ 50/pessoa&#10;Churrasco familiar — R$ 30/pessoa&#10;Day use — R$ 25/pessoa&#10;Evento corporativo — sob consulta" style="min-height:120px">A partir de R$ 30,00 por pessoa (variável conforme tipo de evento)</textarea>
+          <div class="hint">Detalhe o valor para cada tipo de evento que o espaço recebe.</div>
+        </div>
+        <div class="field">
+          <label class="field-label">Valor da diária — dia útil / semana</label>
+          <input type="text" name="valor_semana" placeholder="R$ ____">
+        </div>
+        <div class="field">
+          <label class="field-label">Alta temporada — cobra valor diferenciado?</label>
+          <div class="radio-group">
+            <label class="opt selected"><input type="radio" name="alta_temporada" value="Sim, tem acréscimo" checked>Sim, tem acréscimo</label>
+            <label class="opt"><input type="radio" name="alta_temporada" value="Não, preço único">Não, preço único</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Se tem alta temporada, quais períodos?</label>
+          <input type="text" name="alta_periodos" value="Maio, junho, julho, novembro e dezembro" placeholder="Ex: dezembro, carnaval, férias de julho...">
+        </div>
+        <div class="field">
+          <label class="field-label">Tem opção de day use ou turno parcial?</label>
+          <div class="radio-group">
+            <label class="opt selected"><input type="radio" name="dayuse" value="Sim" checked>Sim</label>
+            <label class="opt"><input type="radio" name="dayuse" value="Não">Não</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Se sim, qual o valor e horário do turno?</label>
+          <input type="text" name="dayuse_valor" placeholder="Ex: turno diurno das 8h às 17h por R$ ____">
+        </div>
+        <div class="field">
+          <label class="field-label">Horário de check-in e check-out</label>
+          <div class="row2">
+            <input type="text" name="checkin" placeholder="Check-in: Ex: 10h">
+            <input type="text" name="checkout" placeholder="Check-out: Ex: 18h">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Antecedência mínima para reservar</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="antecedencia_min" value="Sem mínimo">Sem mínimo</label>
+            <label class="opt"><input type="radio" name="antecedencia_min" value="1 semana">1 semana</label>
+            <label class="opt"><input type="radio" name="antecedencia_min" value="2 semanas">2 semanas</label>
+            <label class="opt"><input type="radio" name="antecedencia_min" value="1 mês ou mais">1 mês ou mais</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Fornecedores — buffet e serviços externos</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="fornecedores" value="Só fornecedores indicados">Só indicados</label>
+            <label class="opt"><input type="radio" name="fornecedores" value="Cliente traz os seus">Cliente traz os seus</label>
+            <label class="opt"><input type="radio" name="fornecedores" value="Temos indicações, mas é livre">Temos indicações, mas é livre</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Como funciona o processo de reserva?</label>
+          <textarea name="processo_reserva" placeholder="Sinal, prazo, formas de pagamento aceitas, contrato..."></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Política de cancelamento</label>
+          <textarea name="cancelamento" placeholder="Prazo, multa, reembolso parcial ou total..." value=""></textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Com quanto tempo de antecedência costumam ser feitas as reservas?</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="antecedencia_reservas" value="Menos de 1 mês">Menos de 1 mês</label>
+            <label class="opt"><input type="radio" name="antecedencia_reservas" value="1 a 3 meses">1 a 3 meses</label>
+            <label class="opt"><input type="radio" name="antecedencia_reservas" value="3 a 6 meses">3 a 6 meses</label>
+            <label class="opt"><input type="radio" name="antecedencia_reservas" value="Mais de 6 meses">Mais de 6 meses</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 PÚBLICO -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">👥</div>
+        <div class="section-title">Público & Posicionamento</div>
+        <div class="section-num">Livre</div>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">Quem é o cliente ideal do Ch&acirc;teau?</label>
+          <textarea name="cliente_ideal" placeholder="Ex: famílias de BH que buscam lazer no final de semana...">BH e Região Metropolitana — aniversários, batizados, bodas, casamentos, confraternizações, família e amigos</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Qual sentimento você quer que o cliente tenha ao ver o Instagram?</label>
+          <div class="radio-group">
+            <label class="opt"><input type="radio" name="sentimento_instagram" value="Quero alugar agora">"Quero alugar agora"</label>
+            <label class="opt"><input type="radio" name="sentimento_instagram" value="Que lugar sofisticado">"Que lugar sofisticado"</label>
+            <label class="opt selected"><input type="radio" name="sentimento_instagram" value="Parece aconchegante e familiar" checked>"Aconchegante e familiar"</label>
+            <label class="opt"><input type="radio" name="sentimento_instagram" value="Confiança e profissionalismo">"Confiança e profissionalismo"</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">Existe alguma restrição importante que o cliente precisa saber?</label>
+          <textarea name="restricoes_gerais" placeholder="Limite de idade, proibição de fogos, regras de bebida...">Som até 00h, pets permitidos</textarea>
+        </div>
+        <div class="field">
+          <label class="field-label">Tem espaços concorrentes que admira ou usa como referência?</label>
+          <textarea name="referencias" placeholder="Nome de outros espaços, perfis do Instagram que acha bonito..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 PÚBLICO -->
+    <div class="section-card">
+      <div class="section-header">
+        <div class="section-icon">💬</div>
+        <div class="section-title">Observações Finais</div>
+        <div class="section-num">Livre</div>
+      </div>
+      <div class="section-body">
+        <div class="field">
+          <label class="field-label">Tem alguma informação ou pedido especial que queira adicionar?</label>
+          <textarea name="observacoes" placeholder="Algo que não foi perguntado mas você considera importante para o projeto..." style="min-height:100px"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-area">
+      <button type="submit" class="btn-submit" id="btnSubmit">Enviar Briefing</button>
+      <div class="submit-note">Suas respostas vão direto para a planilha do projeto.</div>
+    </div>
+
+  </form>
+
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Briefing enviado!</div>
+    <p class="success-text">Obrigado, Luiz! Recebemos todas as informações e em breve a equipe entrará em contato para alinhar os próximos passos.</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  Ch&acirc;teau Santo Ant&ocirc;nio · Briefing de Repaginação Instagram · 2025
+</footer>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzy1xUXzkXx1RPK-uCrFfMGVajLxigduskraQG9qVI01FpfjUusL_guKxLQoFaM8CRw/exec';
+const TOTAL = 39;
+
+document.querySelectorAll('.opt').forEach(opt => {
+  opt.addEventListener('click', function() {
+    const name = this.querySelector('input').name;
+    document.querySelectorAll(`.opt input[name="${name}"]`).forEach(r => r.closest('.opt').classList.remove('selected'));
+    this.classList.add('selected');
+    this.querySelector('input').checked = true;
+    updateProgress();
+  });
+});
+
+document.querySelectorAll('.check-item').forEach(item => {
+  item.addEventListener('click', function() {
+    this.classList.toggle('selected');
+    this.querySelector('input').checked = this.classList.contains('selected');
+    updateProgress();
+  });
+});
+
+document.querySelectorAll('input[type=text],input[type=tel],input[type=email],textarea').forEach(el => {
+  el.addEventListener('input', updateProgress);
+});
+
+function countFilled() {
+  let filled = 0;
+  document.querySelectorAll('input[type=text],input[type=tel],input[type=email],textarea').forEach(i => { if(i.value.trim()) filled++; });
+  const radioNames = [...new Set([...document.querySelectorAll('.opt input[type=radio]')].map(r => r.name))];
+  radioNames.forEach(name => { if(document.querySelector(`.opt input[name="${name}"]:checked`)) filled++; });
+  const checkGroups = [...new Set([...document.querySelectorAll('.check-item input[type=checkbox]')].map(c => c.name))];
+  checkGroups.forEach(name => { if(document.querySelector(`.check-item input[name="${name}"]:checked`)) filled++; });
+  return Math.min(filled, TOTAL);
+}
+
+function updateProgress() {
+  const filled = countFilled();
+  document.getElementById('pgFill').style.width = Math.round((filled/TOTAL)*100) + '%';
+  document.getElementById('pgLabel').textContent = filled + ' de ' + TOTAL;
+}
+
+document.getElementById('briefingForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const required = [
+    {id:'f-nome',field:'nome_espaco'},
+    {id:'f-endereco',field:'endereco'},
+    {id:'f-acesso',field:'acesso'},
+    
+  ];
+  let valid = true;
+  required.forEach(r => {
+    const el = document.querySelector(`[name="${r.field}"]`);
+    const wrapper = document.getElementById(r.id);
+    if (!el.value.trim()) { wrapper.classList.add('has-error'); valid = false; }
+    else { wrapper.classList.remove('has-error'); }
+  });
+  if (!valid) { document.querySelector('.has-error').scrollIntoView({behavior:'smooth',block:'center'}); return; }
+
+  const data = {};
+  new FormData(this).forEach((val, key) => {
+    data[key] = data[key] ? data[key] + ', ' + val : val;
+  });
+  data.data_envio = new Date().toLocaleString('pt-BR');
+
+  document.getElementById('loadingOverlay').classList.add('show');
+  document.getElementById('btnSubmit').disabled = true;
+
   try {
-    const dados = JSON.parse(e.postData.contents);
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-    let sheet = ss.getSheetByName(SHEET_NAME);
-
-    // Cria a aba se não existir
-    if (!sheet) {
-      sheet = ss.insertSheet(SHEET_NAME);
-
-      // Cabeçalhos
-      const cabecalhos = [
-        'Data de Envio',
-        'Nome do Espaço',
-        'Endereço',
-        'Como Chegar',
-        'Tipo de Estrada',
-        'Tempo de Existência',
-        'História / Nome',
-        'Capacidade Mínima',
-        'Capacidade Máxima',
-        'Estruturas',
-        'Capacidade Estacionamento',
-        'Outras Estruturas',
-        'Diferenciais',
-        'Pets',
-        'Tipos de Eventos',
-        'Decoração',
-        'Restrições Decoração',
-        'Som Horário',
-        'Som Observações',
-        'Valor FDS',
-        'Valor Semana',
-        'Alta Temporada',
-        'Alta Períodos',
-        'Day Use',
-        'Day Use Valor/Horário',
-        'Check-in',
-        'Check-out',
-        'Antecedência Mínima',
-        'Fornecedores',
-        'Processo de Reserva',
-        'Cancelamento',
-        'Antecedência das Reservas',
-        'Cliente Ideal',
-        'Canais de Aquisição',
-        'Estilo em 3 Palavras',
-        'Referências',
-        'Sentimento Instagram',
-        'Restrições Gerais',
-        'Instagram Handle',
-        'Instagram Atual',
-        'Logo',
-        'Fotos',
-        'Vídeos',
-        'Depoimentos',
-        'WhatsApp',
-        'E-mail',
-        'Observações'
-      ];
-
-      sheet.appendRow(cabecalhos);
-
-      // Formata cabeçalho
-      const headerRange = sheet.getRange(1, 1, 1, cabecalhos.length);
-      headerRange.setBackground('#1B2530');
-      headerRange.setFontColor('#F2ECDD');
-      headerRange.setFontWeight('bold');
-      headerRange.setFontSize(10);
-      sheet.setFrozenRows(1);
-      sheet.setColumnWidth(1, 140);
-    }
-
-    // Linha de dados
-    const linha = [
-      dados.data_envio || new Date().toLocaleString('pt-BR'),
-      dados.nome_espaco || '',
-      dados.endereco || '',
-      dados.acesso || '',
-      dados.estrada || '',
-      dados.tempo_existencia || '',
-      dados.historia || '',
-      dados.capacidade_min || '',
-      dados.capacidade_max || '',
-      dados.estruturas || '',
-      dados.estacionamento || '',
-      dados.outras_estruturas || '',
-      dados.diferenciais || '',
-      dados.pets || '',
-      dados.tipos_eventos || '',
-      dados.decoracao || '',
-      dados.restricoes_decoracao || '',
-      dados.som_horario || '',
-      dados.som_obs || '',
-      dados.valor_fds || '',
-      dados.valor_semana || '',
-      dados.alta_temporada || '',
-      dados.alta_periodos || '',
-      dados.dayuse || '',
-      dados.dayuse_valor || '',
-      dados.checkin || '',
-      dados.checkout || '',
-      dados.antecedencia_min || '',
-      dados.fornecedores || '',
-      dados.processo_reserva || '',
-      dados.cancelamento || '',
-      dados.antecedencia_reservas || '',
-      dados.cliente_ideal || '',
-      dados.canais_aquisicao || '',
-      dados.estilo_palavras || '',
-      dados.referencias || '',
-      dados.sentimento_instagram || '',
-      dados.restricoes_gerais || '',
-      dados.instagram_handle || '',
-      dados.instagram_atual || '',
-      dados.logo || '',
-      dados.fotos || '',
-      dados.videos || '',
-      dados.depoimentos || '',
-      dados.whatsapp || '',
-      dados.email_contato || '',
-      dados.observacoes || ''
-    ];
-
-    sheet.appendRow(linha);
-
-    // Auto-ajusta largura das colunas
-    sheet.autoResizeColumns(1, 47);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'ok' }))
-      .setMimeType(ContentService.MimeType.JSON);
-
+    await fetch(SCRIPT_URL, {method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+    document.getElementById('loadingOverlay').classList.remove('show');
+    document.getElementById('briefingForm').style.display = 'none';
+    document.getElementById('successScreen').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
   } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ status: 'erro', message: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
+    document.getElementById('loadingOverlay').classList.remove('show');
+    document.getElementById('btnSubmit').disabled = false;
+    alert('Erro ao enviar. Verifique sua conexão e tente novamente.');
   }
-}
+});
 
-// Função de teste — rode para ver se a planilha está conectada
-function testarConexao() {
-  const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
-  Logger.log('✅ Planilha conectada: ' + ss.getName());
-}
+updateProgress();
+</script>
+
+<script>
+// Pré-seleção automática com base nas respostas do Luiz
+window.addEventListener('load', function() {
+  // Day use = Sim
+  var dayuseSim = document.querySelector('.opt input[name="dayuse"][value="Sim"]');
+  if (dayuseSim) { dayuseSim.checked = true; dayuseSim.closest('.opt').classList.add('selected'); }
+
+  // Pets = Sim, sem restrições
+  var petsSim = document.querySelector('.opt input[name="pets"][value="Sim, sem restrições"]');
+  if (petsSim) { petsSim.checked = true; petsSim.closest('.opt').classList.add('selected'); }
+
+  // Som até 00h
+  var som = document.querySelector('.opt input[name="som_horario"][value="Até 00h"]');
+  if (som) { som.checked = true; som.closest('.opt').classList.add('selected'); }
+
+  // Tipos de eventos
+  var eventos = ['Aniversários','Casamentos e bodas','Churrasco e confraternizações','Eventos corporativos','Day use / lazer familiar'];
+  eventos.forEach(function(v) {
+    var el = document.querySelector('.check-item input[name="tipos_eventos"][value="' + v + '"]');
+    if (el) { el.checked = true; el.closest('.check-item').classList.add('selected'); }
+  });
+
+  // Alta temporada = Sim
+  var alta = document.querySelector('.opt input[name="alta_temporada"][value="Sim, tem acréscimo"]');
+  if (alta) { alta.checked = true; alta.closest('.opt').classList.add('selected'); }
+
+  // Alta períodos
+  var altaPer = document.querySelector('input[name="alta_periodos"]');
+  if (altaPer) altaPer.value = 'Maio, junho, julho, novembro e dezembro';
+
+  // Antecedência reservas
+  var antec = document.querySelector('.opt input[name="antecedencia_reservas"][value="1 a 3 meses"]');
+  if (antec) { antec.checked = true; antec.closest('.opt').classList.add('selected'); }
+
+  updateProgress();
+});
+</script>
+</body>
+</html>
