@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Briefing — Château Santo Antônio</title>
+<title>Briefing — Ch&acirc;teau Santo Ant&ocirc;nio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -154,10 +154,13 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
 </div>
 
 <header class="site-header">
+  <div style="margin-bottom:1.5rem">
+    <img src="logo.png" alt="Ch&acirc;teau Santo Ant&ocirc;nio" style="height:110px;width:auto;filter:drop-shadow(0 2px 8px rgba(168,133,63,0.18))">
+  </div>
   <div class="header-eyebrow">Briefing de Projeto</div>
-  <h1 class="header-title">Château Santo Antônio</h1>
-  <div class="header-subtitle">Chácara & Eventos · Repaginação Instagram</div>
-  <p class="header-desc">Olá, Luiz! Para começarmos a repaginação do Instagram do Château, precisamos conhecer melhor o espaço. Preencha com calma — suas respostas serão a base de todo o projeto.</p>
+  <h1 class="header-title">Ch&acirc;teau Santo Ant&ocirc;nio</h1>
+  <div class="header-subtitle">Ch&aacute;cara & Eventos · Repaginação Instagram</div>
+  <p class="header-desc">Olá, Luiz! Para começarmos a repaginação do Instagram do Ch&acirc;teau, precisamos conhecer melhor o espaço. Preencha com calma — suas respostas serão a base de todo o projeto.</p>
   <div class="gold-line"></div>
 </header>
 
@@ -179,12 +182,12 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
       <div class="section-body">
         <div class="field" id="f-nome">
           <label class="field-label">Nome oficial do espaço <span class="req">*</span></label>
-          <input type="text" name="nome_espaco" placeholder="Ex: Château Santo Antônio">
+          <input type="text" name="nome_espaco" placeholder="Ex: Ch&acirc;teau Santo Ant&ocirc;nio" value="Ch&acirc;teau Santo Ant&ocirc;nio">
           <div class="field-error">Por favor, preencha este campo.</div>
         </div>
         <div class="field" id="f-endereco">
           <label class="field-label">Endereço completo <span class="req">*</span></label>
-          <textarea name="endereco" placeholder="Rua, número, cidade, estado, CEP" style="min-height:64px"></textarea>
+          <textarea name="endereco" placeholder="Rua, número, cidade, estado, CEP" style="min-height:64px">R. Cinco, 215 - Ch&aacute;cara Novo Horizonte, Contagem - MG, 32044-451</textarea>
           <div class="field-error">Por favor, preencha este campo.</div>
         </div>
         <div class="field" id="f-acesso">
@@ -204,17 +207,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
           <label class="field-label">Há quanto tempo o espaço existe?</label>
           <input type="text" name="tempo_existencia" placeholder="Ex: 8 anos">
         </div>
-        <div class="field">
-          <label class="field-label">Qual é a história e o significado do nome?</label>
-          <textarea name="historia" placeholder="Conte como surgiu o Château, o que ele representa para você..."></textarea>
-        </div>
-        <div class="field">
-          <label class="field-label">Capacidade do espaço</label>
-          <div class="row2">
-            <input type="text" name="capacidade_min" placeholder="Mínimo de pessoas">
-            <input type="text" name="capacidade_max" placeholder="Máximo de pessoas">
-          </div>
-        </div>
+        
       </div>
     </div>
 
@@ -242,7 +235,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
           </div>
         </div>
         <div class="field">
-          <label class="field-label">Capacidade do estacionamento</label>
+          <label class="field-label">Quantos carros cabem no estacionamento?</label>
           <input type="text" name="estacionamento" placeholder="Ex: até 20 carros">
         </div>
         <div class="field">
@@ -250,13 +243,13 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
           <textarea name="outras_estruturas" placeholder="Cachoeira, lago, trilha, glamping, vista panorâmica..."></textarea>
         </div>
         <div class="field">
-          <label class="field-label">O que torna o Château diferente dos concorrentes?</label>
+          <label class="field-label">O que torna o Ch&acirc;teau diferente dos concorrentes?</label>
           <textarea name="diferenciais" placeholder="Ex: localização privilegiada, atendimento personalizado, natureza preservada..."></textarea>
         </div>
         <div class="field">
           <label class="field-label">Aceita pets?</label>
           <div class="radio-group">
-            <label class="opt"><input type="radio" name="pets" value="Sim, sem restrições">Sim, sem restrições</label>
+            <label class="opt selected"><input type="radio" name="pets" value="Sim, sem restrições" checked>Sim, sem restrições</label>
             <label class="opt"><input type="radio" name="pets" value="Sim, com restrições">Sim, com restrições</label>
             <label class="opt"><input type="radio" name="pets" value="Não aceita">Não aceita</label>
           </div>
@@ -264,11 +257,11 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
         <div class="field">
           <label class="field-label">Quais tipos de eventos são realizados?</label>
           <div class="check-list">
-            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Aniversários"><div class="check-box"></div>Aniversários</label>
-            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Casamentos e bodas"><div class="check-box"></div>Casamentos e bodas</label>
-            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Churrasco e confraternizações"><div class="check-box"></div>Churrasco e confraternizações</label>
-            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Eventos corporativos"><div class="check-box"></div>Eventos corporativos</label>
-            <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Day use / lazer familiar"><div class="check-box"></div>Day use / lazer familiar</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Aniversários" checked><div class="check-box"></div>Aniversários</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Casamentos e bodas" checked><div class="check-box"></div>Casamentos e bodas</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Churrasco e confraternizações" checked><div class="check-box"></div>Churrasco e confraternizações</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Eventos corporativos" checked><div class="check-box"></div>Eventos corporativos</label>
+            <label class="check-item selected"><input type="checkbox" name="tipos_eventos" value="Day use / lazer familiar" checked><div class="check-box"></div>Day use / lazer familiar</label>
             <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Fotoshoots / ensaios"><div class="check-box"></div>Fotoshoots / ensaios</label>
             <label class="check-item"><input type="checkbox" name="tipos_eventos" value="Retiros / imersões"><div class="check-box"></div>Retiros / imersões</label>
           </div>
@@ -289,7 +282,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
           <label class="field-label">Som — até que horário é permitido?</label>
           <div class="radio-group">
             <label class="opt"><input type="radio" name="som_horario" value="Até 22h">Até 22h</label>
-            <label class="opt"><input type="radio" name="som_horario" value="Até 00h">Até 00h</label>
+            <label class="opt selected"><input type="radio" name="som_horario" value="Até 00h" checked>Até 00h</label>
             <label class="opt"><input type="radio" name="som_horario" value="Até 02h">Até 02h</label>
             <label class="opt"><input type="radio" name="som_horario" value="Outro horário">Outro horário</label>
           </div>
@@ -311,7 +304,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
       <div class="section-body">
         <div class="field">
           <label class="field-label">Valor da diária completa — final de semana</label>
-          <input type="text" name="valor_fds" placeholder="R$ ____ (ou 'prefiro não divulgar nas artes')">
+          <input type="text" name="valor_fds" value="A partir de R$ 30,00 por pessoa (variável conforme tipo de evento)" placeholder="R$ ____">
         </div>
         <div class="field">
           <label class="field-label">Valor da diária — dia útil / semana</label>
@@ -320,18 +313,18 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
         <div class="field">
           <label class="field-label">Alta temporada — cobra valor diferenciado?</label>
           <div class="radio-group">
-            <label class="opt"><input type="radio" name="alta_temporada" value="Sim, tem acréscimo">Sim, tem acréscimo</label>
+            <label class="opt selected"><input type="radio" name="alta_temporada" value="Sim, tem acréscimo" checked>Sim, tem acréscimo</label>
             <label class="opt"><input type="radio" name="alta_temporada" value="Não, preço único">Não, preço único</label>
           </div>
         </div>
         <div class="field">
           <label class="field-label">Se tem alta temporada, quais períodos?</label>
-          <input type="text" name="alta_periodos" placeholder="Ex: dezembro, carnaval, férias de julho...">
+          <input type="text" name="alta_periodos" value="Maio, junho, julho, novembro e dezembro" placeholder="Ex: dezembro, carnaval, férias de julho...">
         </div>
         <div class="field">
           <label class="field-label">Tem opção de day use ou turno parcial?</label>
           <div class="radio-group">
-            <label class="opt"><input type="radio" name="dayuse" value="Sim">Sim</label>
+            <label class="opt selected"><input type="radio" name="dayuse" value="Sim" checked>Sim</label>
             <label class="opt"><input type="radio" name="dayuse" value="Não">Não</label>
           </div>
         </div>
@@ -369,7 +362,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
         </div>
         <div class="field">
           <label class="field-label">Política de cancelamento</label>
-          <textarea name="cancelamento" placeholder="Prazo, multa, reembolso parcial ou total..."></textarea>
+          <textarea name="cancelamento" placeholder="Prazo, multa, reembolso parcial ou total..." value=""></textarea>
         </div>
         <div class="field">
           <label class="field-label">Com quanto tempo de antecedência costumam ser feitas as reservas?</label>
@@ -384,98 +377,6 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
     </div>
 
     <!-- 04 PÚBLICO -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-icon">👥</div>
-        <div class="section-title">Público & Posicionamento</div>
-        <div class="section-num">30 — 35</div>
-      </div>
-      <div class="section-body">
-        <div class="field" id="f-cliente-ideal">
-          <label class="field-label">Quem é o cliente ideal do Château? <span class="req">*</span></label>
-          <textarea name="cliente_ideal" placeholder="Ex: famílias de BH que buscam lazer no final de semana, casais comemorando datas especiais..."></textarea>
-          <div class="field-error">Por favor, preencha este campo.</div>
-        </div>
-        
-        
-        <div class="field">
-          <label class="field-label">Tem espaços concorrentes que admira ou usa como referência?</label>
-          <textarea name="referencias" placeholder="Nome de outros espaços, perfis do Instagram que acha bonito..."></textarea>
-        </div>
-        <div class="field">
-          <label class="field-label">Qual sentimento você quer que o cliente tenha ao ver o Instagram?</label>
-          <div class="radio-group">
-            <label class="opt"><input type="radio" name="sentimento_instagram" value="Quero alugar agora">"Quero alugar agora"</label>
-            <label class="opt"><input type="radio" name="sentimento_instagram" value="Que lugar sofisticado">"Que lugar sofisticado"</label>
-            <label class="opt"><input type="radio" name="sentimento_instagram" value="Parece aconchegante e familiar">"Aconchegante e familiar"</label>
-            <label class="opt"><input type="radio" name="sentimento_instagram" value="Confiança e profissionalismo">"Confiança e profissionalismo"</label>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Existe alguma restrição importante que o cliente precisa saber?</label>
-          <textarea name="restricoes_gerais" placeholder="Limite de idade, proibição de fogos, regras de bebida..."></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- 05 INSTAGRAM -->
-    <div class="section-card">
-      <div class="section-header">
-        <div class="section-icon">📱</div>
-        <div class="section-title">Instagram & Identidade</div>
-        <div class="section-num">36 — 39</div>
-      </div>
-      <div class="section-body">
-        <div class="field">
-          <label class="field-label">Qual @ você quer usar no Instagram?</label>
-          <input type="text" name="instagram_handle" placeholder="Ex: @chateausantoantonio">
-          <div class="hint">Se ainda não tem certeza, podemos definir juntos antes de criar as artes.</div>
-        </div>
-        <div class="field">
-          <label class="field-label">Já tem Instagram criado? Qual o @ atual?</label>
-          <input type="text" name="instagram_atual" placeholder="Se não tiver, escreva 'não'">
-        </div>
-        <div class="field">
-          <label class="field-label">Tem logotipo ou identidade visual?</label>
-          <div class="radio-group">
-            <label class="opt"><input type="radio" name="logo" value="Sim, tenho arquivo pronto">Sim, tenho arquivo</label>
-            <label class="opt"><input type="radio" name="logo" value="Tenho algo mas precisa melhorar">Tenho mas precisa melhorar</label>
-            <label class="opt"><input type="radio" name="logo" value="Não tenho nada ainda">Não tenho nada</label>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Tem fotos profissionais do espaço?</label>
-          <div class="radio-group">
-            <label class="opt"><input type="radio" name="fotos" value="Sim, tenho bastante">Sim, bastante</label>
-            <label class="opt"><input type="radio" name="fotos" value="Tenho algumas, poucas">Algumas, poucas</label>
-            <label class="opt"><input type="radio" name="fotos" value="Não tenho fotos profissionais">Não tenho</label>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Tem vídeos do espaço?</label>
-          <div class="radio-group">
-            <label class="opt"><input type="radio" name="videos" value="Sim, vídeos bons">Sim, bons</label>
-            <label class="opt"><input type="radio" name="videos" value="Tenho alguns mas são amadores">Tenho, mas amadores</label>
-            <label class="opt"><input type="radio" name="videos" value="Não tenho nada">Não tenho</label>
-          </div>
-        </div>
-        <div class="field">
-          <label class="field-label">Tem depoimentos ou avaliações de clientes?</label>
-          <textarea name="depoimentos" placeholder="Cole aqui avaliações ou mensagens positivas recebidas..."></textarea>
-        </div>
-        <div class="field" id="f-whatsapp">
-          <label class="field-label">WhatsApp de reservas <span class="req">*</span></label>
-          <input type="tel" name="whatsapp" placeholder="(31) 9 9999-9999">
-          <div class="field-error">Por favor, preencha este campo.</div>
-        </div>
-        <div class="field">
-          <label class="field-label">E-mail de contato</label>
-          <input type="email" name="email_contato" placeholder="contato@chateausantoantonio.com.br">
-        </div>
-      </div>
-    </div>
-
-    <!-- 06 OBSERVAÇÕES -->
     <div class="section-card">
       <div class="section-header">
         <div class="section-icon">💬</div>
@@ -505,7 +406,7 @@ body{font-family:var(--font-sans);background:var(--sand-50);color:var(--ink);min
 </main>
 
 <footer class="site-footer">
-  Château Santo Antônio · Briefing de Repaginação Instagram · 2025
+  Ch&acirc;teau Santo Ant&ocirc;nio · Briefing de Repaginação Instagram · 2025
 </footer>
 
 <script>
@@ -591,6 +492,44 @@ document.getElementById('briefingForm').addEventListener('submit', async functio
 });
 
 updateProgress();
+</script>
+
+<script>
+// Pré-seleção automática com base nas respostas do Luiz
+window.addEventListener('load', function() {
+  // Day use = Sim
+  var dayuseSim = document.querySelector('.opt input[name="dayuse"][value="Sim"]');
+  if (dayuseSim) { dayuseSim.checked = true; dayuseSim.closest('.opt').classList.add('selected'); }
+
+  // Pets = Sim, sem restrições
+  var petsSim = document.querySelector('.opt input[name="pets"][value="Sim, sem restrições"]');
+  if (petsSim) { petsSim.checked = true; petsSim.closest('.opt').classList.add('selected'); }
+
+  // Som até 00h
+  var som = document.querySelector('.opt input[name="som_horario"][value="Até 00h"]');
+  if (som) { som.checked = true; som.closest('.opt').classList.add('selected'); }
+
+  // Tipos de eventos
+  var eventos = ['Aniversários','Casamentos e bodas','Churrasco e confraternizações','Eventos corporativos','Day use / lazer familiar'];
+  eventos.forEach(function(v) {
+    var el = document.querySelector('.check-item input[name="tipos_eventos"][value="' + v + '"]');
+    if (el) { el.checked = true; el.closest('.check-item').classList.add('selected'); }
+  });
+
+  // Alta temporada = Sim
+  var alta = document.querySelector('.opt input[name="alta_temporada"][value="Sim, tem acréscimo"]');
+  if (alta) { alta.checked = true; alta.closest('.opt').classList.add('selected'); }
+
+  // Alta períodos
+  var altaPer = document.querySelector('input[name="alta_periodos"]');
+  if (altaPer) altaPer.value = 'Maio, junho, julho, novembro e dezembro';
+
+  // Antecedência reservas
+  var antec = document.querySelector('.opt input[name="antecedencia_reservas"][value="1 a 3 meses"]');
+  if (antec) { antec.checked = true; antec.closest('.opt').classList.add('selected'); }
+
+  updateProgress();
+});
 </script>
 </body>
 </html>
